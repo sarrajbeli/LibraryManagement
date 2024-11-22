@@ -1,4 +1,5 @@
 package com.project.biblio;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -9,7 +10,9 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class BookResource {
-    private final BookService bookService = new BookService();
+    
+    @Inject
+    BookService bookService;
 
     // Récupérer tous les livres
     @GET

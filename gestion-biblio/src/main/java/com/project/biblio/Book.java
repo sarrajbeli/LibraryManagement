@@ -1,12 +1,25 @@
 package com.project.biblio;
 import java.time.LocalDate;
 
-public class Book {
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "books") 
+public class Book extends PanacheEntityBase {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "title", nullable = false)
     private String title;
+    @Column(name = "author", nullable = false)
     private String author;
+    @Column(name = "genre")
     private String genre;
+    @Column(name = "publication_date")
     private LocalDate publicationDate;
+    @Column(name = "stock", nullable = false)
     private int stock;
     
     public Book() {

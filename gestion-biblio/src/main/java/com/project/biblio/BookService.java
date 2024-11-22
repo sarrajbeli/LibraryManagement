@@ -1,34 +1,33 @@
 package com.project.biblio;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
+import jakarta.transaction.Transactional;
+import jakarta.enterprise.context.ApplicationScoped;
 import java.time.LocalDate;
+import java.util.List;
 
-
+@ApplicationScoped
 public class BookService {
-    private final Map<Long, Book> books = new HashMap<>();
-    private final AtomicLong idGenerator = new AtomicLong(1);
 
-    // Ajouter un livre
+    @Transactional
     public Book addBook(String title, String author, String genre, LocalDate publicationDate, int stock) {
-        Long id = idGenerator.getAndIncrement();
-        Book book = new Book(id, title, author, genre, publicationDate, stock);
-        books.put(id, book);
+        Book book = new Book(null, title, author, genre, publicationDate, stock);
+        book.persist();  
         return book;
     }
 
-    // Récupérer tous les livres
+    @Transactional
     public List<Book> getAllBooks() {
-        return new ArrayList<>(books.values());
+        return Book.listAll();  // Utilise Panache pour récupérer tous les livres
     }
 
-    // Récupérer un livre par ID
+    @Transactional
     public Book getBookById(Long id) {
-        return books.get(id);
+        return Book.findById(id);  // Recherche un livre par ID
     }
 
     // Mettre à jour un livre
+    @Transactional
     public Book updateBook(Long id, String title, String author, String genre, LocalDate publicationDate, int stock) {
-        Book book = books.get(id);
+        Book book = Book.findById(id); // Cherche le livre par ID
         if (book == null) {
             return null;
         }
@@ -41,7 +40,13 @@ public class BookService {
     }
 
     // Supprimer un livre
+    @Transactional
     public boolean deleteBook(Long id) {
-        return books.remove(id) != null;
+        Book book = Book.findById(id);
+        if (book != null) {
+            book.delete();
+            return true;
+        }
+        return false;
     }
 }
